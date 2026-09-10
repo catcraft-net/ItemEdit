@@ -1,6 +1,7 @@
 package emanondev.itemedit.gui;
 
 import emanondev.itemedit.utility.InventoryUtils;
+import emanondev.itemedit.utility.InventoryHolderAccess;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,43 +11,47 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 public class GuiHandler implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private static void onOpen(InventoryOpenEvent event) {
         Inventory topInventory = InventoryUtils.getTopInventory(event);
-        if (!(topInventory.getHolder() instanceof Gui)) {
+        InventoryHolder holder = InventoryHolderAccess.getHolder(topInventory);
+        if (!(holder instanceof Gui)) {
             return;
         }
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }
-        ((Gui) topInventory.getHolder()).onOpen(event);
+        ((Gui) holder).onOpen(event);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private static void onClose(InventoryCloseEvent event) {
         Inventory topInventory = InventoryUtils.getTopInventory(event);
-        if (!(topInventory.getHolder() instanceof Gui)) {
+        InventoryHolder holder = InventoryHolderAccess.getHolder(topInventory);
+        if (!(holder instanceof Gui)) {
             return;
         }
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }
-        ((Gui) topInventory.getHolder()).onClose(event);
+        ((Gui) holder).onClose(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     private static void onClick(InventoryClickEvent event) {
         Inventory topInventory = InventoryUtils.getTopInventory(event);
-        if (!(topInventory.getHolder() instanceof Gui)) {
+        InventoryHolder holder = InventoryHolderAccess.getHolder(topInventory);
+        if (!(holder instanceof Gui)) {
             return;
         }
         event.setCancelled(true);
         if (event.getClickedInventory() != null && event.getClickedInventory().equals(topInventory)) {
             if (event.getWhoClicked() instanceof Player) {
-                ((Gui) topInventory.getHolder()).onClick(event);
+                ((Gui) holder).onClick(event);
             }
         }
     }
@@ -54,9 +59,10 @@ public class GuiHandler implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     private static void onDrag(InventoryDragEvent event) {
         Inventory topInventory = InventoryUtils.getTopInventory(event);
-        if (topInventory.getHolder() instanceof Gui) {
+        InventoryHolder holder = InventoryHolderAccess.getHolder(topInventory);
+        if (holder instanceof Gui) {
             event.setCancelled(true);
-            ((Gui) topInventory.getHolder()).onDrag(event);
+            ((Gui) holder).onDrag(event);
         }
     }
 }
