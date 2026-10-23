@@ -15,7 +15,7 @@ language:
   default: 'en'
   # Allowed on ServerVersion 1.12+
   # When true the plugin will use the client language if a language file exist for that client
-  use_multilanguage: true
+  use_multilanguage: false
   # Regenerate language files on version change?
   # if true delete the files and replace them with latest version when game version change is detected
   regen_files: true
